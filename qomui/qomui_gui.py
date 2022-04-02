@@ -1370,7 +1370,7 @@ class QomuiGui(QtWidgets.QWidget):
             return "updated"
 
         except CalledProcessError as e:
-            self.logger.info("Non-zero exit status: configuration changes not applied")
+            self.logger.info(f"{update_cmd}: Non-zero exit status - configuration changes not applied")
 
             self.notify(
                         "Qomui: Authentication failure",
