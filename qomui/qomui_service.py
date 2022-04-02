@@ -406,6 +406,22 @@ class QomuiDbus(dbus.service.Object):
             except FileNotFoundError:
                 pass
 
+    @dbus.service.method(BUS_NAME, in_signature='s')
+    def cfgupdate(self, cfg):
+        fh = open("{}/config.json".format(config.ROOTDIR), 'w')
+        fh.write(cfg)
+        fh.close()
+        Popen(['chown', 'root', '{}/config.json'.format(config.ROOTDIR)])
+        Popen(['chmod', '644', '{}/config.json'.format(config.ROOTDIR)])
+
+    @dbus.service.method(BUS_NAME, in_signature='s')
+    def fwupdate(self, cfg):
+        fh = open("{}/firewall.json".format(config.ROOTDIR), 'w')
+        fh.write(cfg)
+        fh.close()
+        Popen(['chown', 'root', '{}/firewall.json'.format(config.ROOTDIR)])
+        Popen(['chmod', '644', '{}/firewall.json'.format(config.ROOTDIR)])
+
     @dbus.service.method(BUS_NAME, in_signature='a{ss}', out_signature='')
     def bypass(self, net):
         self.net = net

@@ -363,29 +363,15 @@ class QomuiCli(QtCore.QObject):
 
 
     def applyoptions(self, temp_config):
+        self.dbus_call('cfgupdate', json.dumps(temp_config))
+        print("Configuration successfully changed")
+        self.qomui_service.load_firewall()
 
-        with open ('{}/config_temp.json'.format(HOMEDIR), 'w') as config:
-            json.dump(temp_config, config)
-
-        update_cmd = ['sudo', sys.executable, '-m', 'qomui.mv_config',
-                        '-d', '{}'.format(HOMEDIR)]
-
-        update = Popen(update_cmd, stdin=PIPE, stdout=PIPE, universal_newlines=True)
-        prompt = update.communicate("" + '\n')[1]
-
-        if update.returncode == 0:
-            print("Configuration successfully changed")
-            self.qomui_service.load_firewall()
-
-            try:
-                if temp_config["bypass"] == 1:
-                    self.qomui_service.bypass(utils.get_user_group())
-            except KeyError:
-                pass
-
-        else:
-            print("Configuration change failed")
-
+        try:
+            if temp_config["bypass"] == 1:
+                self.qomui_service.bypass(utils.get_user_group())
+        except KeyError:
+            pass
         self.show_config(self.get_config())
 
     def get_config(self):
