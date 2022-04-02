@@ -1,6 +1,6 @@
 {
-    "alt_dns1": "208.67.222.222",
-    "alt_dns2": "208.67.220.220",
+    "alt_dns1": "9.9.9.9",
+    "alt_dns2": "149.112.112.112",
     "firewall": 0,
     "autoconnect": 0,
     "minimize": 0,
