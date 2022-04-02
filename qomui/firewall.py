@@ -30,9 +30,15 @@ def check_ipv6():
 
 def add_rule(rule, check=0, ipt="ip4"):
     if ipt == "ip4":
-        ip_cmd = ["iptables", "--wait", ]
+        if 'nf_tables' in check_output(['iptables', '--version']).decode():
+            ip_cmd = ["iptables-legacy", "--wait", ]
+        else:
+            ip_cmd = ["iptables", "--wait", ]
     else:
-        ip_cmd = ["ip6tables", "--wait", ]
+        if 'nf_tables' in check_output(['ip6tables', '--version']).decode():
+            ip_cmd = ["ip6tables-legacy", "--wait", ]
+        else:
+            ip_cmd = ["ip6tables", "--wait", ]
 
     if ipt == "ip4" or check == 1 or check_ipv6() is True:
         # check if rule already exists and only set it otherwise
@@ -51,7 +57,8 @@ def add_rule(rule, check=0, ipt="ip4"):
                 logging.debug("iptables: applied {}".format(ip_cmd + rule))
 
             except CalledProcessError:
-                logging.warning("iptables: failed to apply {}".format(ip_cmd + rule))
+                logging.warning(
+                    "iptables: failed to apply {}".format(ip_cmd + rule))
 
 
 def apply_rules(opt, block_lan=0, preserve=0):
@@ -99,13 +106,18 @@ def batch_rule_6(rules):
 
 def save_existing_rules(fw_rules):
     try:
-        existing_rules = check_output(["iptables", "-S"]).decode("utf-8")
+        if 'nf_tables' in check_output(['iptables', '--version']).decode():
+            cmdline = ["iptables-legacy", "-S"]
+        else:
+            cmdline = ["iptables", "-S"]
+        existing_rules = check_output(cmdline).decode("utf-8")
         for line in existing_rules.split('\n'):
             rpl = line.replace("/32", "")
             rule = shlex.split(rpl)
             if len(rule) != 0:
                 match = 0
-                omit = fw_rules["ipv4rules"] + fw_rules["flush"] + fw_rules["ipv4local"]
+                omit = fw_rules["ipv4rules"] + \
+                    fw_rules["flush"] + fw_rules["ipv4local"]
                 for x in omit:
                     if Counter(x) == Counter(rule):
                         match = 1
@@ -208,7 +220,8 @@ def save_iptables():
     if check_ipv6() is True:
 
         try:
-            outfile6 = open("{}/ip6tables_before.rules".format(config.ROOTDIR), "w")
+            outfile6 = open(
+                "{}/ip6tables_before.rules".format(config.ROOTDIR), "w")
             save6 = Popen(["ip6tables-save"], stdout=outfile, stderr=PIPE)
             save6.wait()
             outfile6.flush()
@@ -221,7 +234,8 @@ def save_iptables():
 def restore_iptables():
     try:
         restore = Popen(
-            ["iptables-restore", "{}/iptables_before.rules".format(config.ROOTDIR)],
+            ["iptables-restore",
+                "{}/iptables_before.rules".format(config.ROOTDIR)],
             stderr=PIPE)
         logging.debug("Restored previous iptables rules")
 
