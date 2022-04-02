@@ -597,8 +597,11 @@ class AddServers(QtCore.QThread):
                     windflix = 1
 
                 for n in s["nodes"]:
-                    city = n["group"].split("-")[0]
-                    group = n["group"].split("- ")[1]
+                    if "-" in n["group"]:
+                        city = n["group"].split("-")[0]
+                        group = n["group"].split("- ")[1]
+                    else:
+                        city = group = n["group"]
                     ip = n["ip2"]
                     ip2 = n["ip3"]
 
@@ -945,7 +948,7 @@ class AddServers(QtCore.QThread):
                             modify[index] = "#{}".format(line)
 
                     elif line.startswith("auth-user-pass"):
-                        auth_file = '{}/certs/{}-auth.txt'.format(config.ROOTDIR, self.provider)
+                        auth_file = '{}/{}/{}-auth.txt'.format(config.ROOTDIR, self.provider, self.provider)
                         modify[index] = 'auth-user-pass {}\n'.format(auth_file)
 
                     elif line.startswith("verb "):
