@@ -1337,17 +1337,12 @@ class QomuiGui(QtWidgets.QWidget):
             if k not in temp_config:
                 temp_config[k] = v
 
-        with open ('{}/config_temp.json'.format(config.HOMEDIR), 'w') as c:
-            json.dump(temp_config, c)
-
-        update_cmd = ['pkexec', sys.executable, '-m', 'qomui.mv_config',
-                      '-d', '{}'.format(config.HOMEDIR)]
+        self.dbus_call('cfgupdate', json.dumps(temp_config))
 
         if firewall is not None:
-            update_cmd.append('-f')
+            self.dbus_call('fwupdate', open("{}/firewall_temp.json".format(config.HOMEDIR), 'r').read())
 
         try:
-            check_call(update_cmd)
             self.logger.info("Configuration changes applied successfully")
             self.dbus_call("load_firewall", 1)
             self.dbus_call("bypass", {**self.routes, **utils.get_user_group()})
@@ -1370,7 +1365,7 @@ class QomuiGui(QtWidgets.QWidget):
             return "updated"
 
         except CalledProcessError as e:
-            self.logger.info("Non-zero exit status: configuration changes not applied")
+            self.logger.info(f"{update_cmd}: Non-zero exit status - configuration changes not applied")
 
             self.notify(
                         "Qomui: Authentication failure",

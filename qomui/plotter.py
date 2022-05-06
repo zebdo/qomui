@@ -45,14 +45,14 @@ class PlotArea(QtWidgets.QWidget):
         legend_painter.setPen(pen)
         legend_painter.drawLine(self.offset, self.hmax, self.wmax-self.x_off, self.hmax)
         legend_painter.drawLine(self.offset, self.offset, self.wmax-self.x_off, self.offset)
-        legend_painter.drawLine(self.offset, self.hmax/2, self.wmax-self.x_off, self.hmax/2)
+        legend_painter.drawLine(self.offset, int(self.hmax/2), self.wmax-self.x_off, int(self.hmax/2))
         legend_painter.drawLine(self.wmax-self.x_off, self.offset, self.wmax-self.x_off, self.hmax)
         legend_painter.drawLine(self.offset, self.offset, self.offset, self.hmax)
         
         pen.setColor(palette.color(QtGui.QPalette.Text))
         legend_painter.setPen(pen)
         legend_painter.drawText(self.wmax-55, self.offset+8, "{} Mbps".format(self.max_val))
-        legend_painter.drawText(self.wmax-55, self.hmax/2+4, "{} Mbps".format(self.max_val/2))
+        legend_painter.drawText(self.wmax-55, int(self.hmax/2+4), "{} Mbps".format(self.max_val/2))
         legend_painter.drawText(self.wmax-55, self.hmax, "{} Mbps".format("0"))
 
         up_painter = QtGui.QPainter(self)
