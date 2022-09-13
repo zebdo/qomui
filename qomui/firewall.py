@@ -51,14 +51,14 @@ def add_rule(rule, check=0, ipt="ip4"):
             else:
                 raise IndexError
 
-        except (IndexError, CalledProcessError):
+        except (IndexError, CalledProcessError) as iptables_exception:
             try:
                 check_call(ip_cmd + rule, stdout=devnull, stderr=devnull)
                 logging.debug("iptables: applied {}".format(ip_cmd + rule))
 
             except CalledProcessError:
                 logging.warning(
-                    "iptables: failed to apply {}".format(' '.join(ip_cmd + rule)))
+                    f"iptables: failed to apply {' '.join(ip_cmd + rule)}: {iptables_exception}")
 
 
 def apply_rules(opt, block_lan=0, preserve=0):
