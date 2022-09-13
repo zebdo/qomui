@@ -83,7 +83,7 @@ class NetMon(QtCore.QThread):
 
         except (CalledProcessError, IndexError):
             self.log.emit(
-                ('error',
+                ('info',
                  'Could not identify default gateway for ipv6 - no network connectivity'))
             default_gateway_6 = "None"
             default_interface_6 = "None"

@@ -58,7 +58,7 @@ def add_rule(rule, check=0, ipt="ip4"):
 
             except CalledProcessError:
                 logging.warning(
-                    f"iptables: failed to apply {' '.join(ip_cmd + rule)}: {iptables_exception}")
+                    f"iptables: failed to apply: {iptables_exception}")
 
 
 def apply_rules(opt, block_lan=0, preserve=0):
