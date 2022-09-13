@@ -1,5 +1,14 @@
 ## Changelog
 
+version 0.8.3 (samicrusader's fork):
+- [new] dbus used for changing config instead of requiring qomui-gui to be ran as root
+- [change] reformat code
+- [change] use Quad9 for alternate DNS
+- [change] clean up apply log
+- [bugfix] handle nftables (temporarily)
+- [bugfix] plotter fix
+- [bugfix] pull default interface name from gateway
+
 version 0.8.2:
 - [new] added AzireVPN
 - [new] option to specify key for Airvpn
