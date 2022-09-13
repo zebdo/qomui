@@ -1,2 +1,5 @@
 upcoming_changes.txt
 arch_temppackage/
+debian/python3-qomui*
+debian/*.deb
+debian/qomui-build/
