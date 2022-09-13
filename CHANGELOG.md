@@ -1,5 +1,9 @@
 ## Changelog
 
+version 0.8.4 (samicrusader's fork):
+- [new] packaged for Debian/Ubuntu
+- [bugfix] more "detailed" logging for iptables failures
+
 version 0.8.3 (samicrusader's fork):
 - [new] dbus used for changing config instead of requiring qomui-gui to be ran as root
 - [change] reformat code
